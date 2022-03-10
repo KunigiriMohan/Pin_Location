@@ -2,20 +2,19 @@ package com.application.pinlocation.serviceimplementaion;
 
 import com.application.pinlocation.dto.UserDTO;
 import com.application.pinlocation.exception.UserNotFoundException;
-import com.application.pinlocation.model.Details;
 import com.application.pinlocation.model.AuthRequest;
 import com.application.pinlocation.model.User;
 import com.application.pinlocation.repository.UserEntityManger;
+import com.application.pinlocation.service.UserServiceEM;
 import com.application.pinlocation.utility.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.stereotype.Service;
-import java.util.List;
 
 
 @Service
-public class UserServiceImplforEntityManager implements com.application.pinlocation.service.UserServiceforEntityManager {
+public class UserServiceImplEM implements UserServiceEM {
 
     @Autowired
     UserEntityManger userEntityManger;
@@ -26,15 +25,6 @@ public class UserServiceImplforEntityManager implements com.application.pinlocat
     @Autowired
     private AuthenticationManager authenticationManager;
 
-    @Override
-    public List<User> getAllUser() {
-        try {
-            return userEntityManger.getAllUserDetails();
-        }
-        catch (Exception exception){
-            throw new UserNotFoundException("User not registered");
-        }
-    }
 
     @Override
     public Object getUserbyId(Long id){
@@ -42,7 +32,8 @@ public class UserServiceImplforEntityManager implements com.application.pinlocat
             return userEntityManger.getUserDetailsById(id);
         }
         catch (Exception exception){
-            throw new UserNotFoundException("User not registered");
+            System.out.println(exception);
+            throw new UserNotFoundException("User with this id not Found");
         }
     }
 
@@ -68,8 +59,5 @@ public class UserServiceImplforEntityManager implements com.application.pinlocat
         }
         return jwtTokenUtil.generateToken(authRequest.getEmail());
     }
-    @Override
-    public Details saveDetails(Details details) {
-        return userEntityManger.saveDetails(details);
-    }
+
 }
